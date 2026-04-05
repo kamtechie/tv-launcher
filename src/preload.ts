@@ -1,2 +1,8 @@
-// See the Electron documentation for details on how to use preload scripts:
-// https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
+import { contextBridge, ipcRenderer } from 'electron';
+
+contextBridge.exposeInMainWorld('launcher', {
+  hide: (): Promise<void> => ipcRenderer.invoke('hide-window'),
+  show: (): Promise<void> => ipcRenderer.invoke('show-window'),
+  launch: (cmd: string): Promise<string> => ipcRenderer.invoke('launch-app', cmd),
+  kill: (id: string): Promise<void> => ipcRenderer.invoke('kill-app', id),
+});
